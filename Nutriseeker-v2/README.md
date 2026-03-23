@@ -56,9 +56,10 @@ The first Colab notebook (`NutriSeeker(with_ifct).ipynb`) remains a reference; v
 2. Upload your project folder as a .zip:
     - Colab: left sidebar → Files → Upload
     - Unzip it, then install dependencies:
-    -   |!unzip -q your_zip_name.zip -d /content|
-        |%cd /content/nutriseeker|
-        |!pip install -r requirements.txt|
+    - code:
+    -   !unzip -q your_zip_name.zip -d /content
+    -   %cd /content/nutriseeker
+    -   !pip install -r requirements.txt
 3. Put your IFCT file in the expected location:
     - Copy/Upload ifct2017_compositions.csv into:
     - /content/nutriseeker/nutriseeker/data/ifct2017_compositions.csv
@@ -69,12 +70,13 @@ proc = subprocess.Popen(<br>
     ["uvicorn", "nutriseeker.app.main:app", "--host", "0.0.0.0", "--port", "8000"],<br>
     cwd="/content/nutriseeker",<br>
 )<br>
-Open the UI window:
-from google.colab import output
-output.serve_kernel_port_as_window(8000, height=900)
-If BLIP-2 OOM / crashes
-Switch to the lighter CPU-friendly vision model (but still uses GPU if available):
-
-import os
-os.environ["NUTRI_VISION"] = "blip"
-Then restart the server.
+5. Open the UI window:
+    - code
+    - from google.colab import output
+    - output.serve_kernel_port_as_window(8000, height=900)
+6. If BLIP-2 OOM / crashes
+    - Switch to the lighter CPU-friendly vision model (but still uses GPU if available):
+    - code:
+    - import os
+    - os.environ["NUTRI_VISION"] = "blip"
+    - Then restart the server.
