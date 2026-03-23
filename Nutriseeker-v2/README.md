@@ -64,6 +64,7 @@ The first Colab notebook (`NutriSeeker(with_ifct).ipynb`) remains a reference; v
     - Copy/Upload ifct2017_compositions.csv into:
     - /content/nutriseeker/nutriseeker/data/ifct2017_compositions.csv
 4. Start the server (BLIP-2 on GPU):<br>
+    - code:
 import os, subprocess <br>
 os.environ["NUTRI_VISION"] = "blip2"<br>
 proc = subprocess.Popen(<br>
