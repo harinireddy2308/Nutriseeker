@@ -1,0 +1,12 @@
+# NutriSeeker — local inference (no API keys)
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.9
+torch>=2.1.0
+transformers>=4.38.0
+accelerate>=0.27.0
+sentence-transformers>=2.6.0
+pillow>=10.0.0
+pandas>=2.1.0
+numpy>=1.26.0
+requests>=2.31.0

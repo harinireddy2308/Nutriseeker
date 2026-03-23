@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NutriSeeker — Multimodal Diet Assessment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="top">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">◈</span>
+      <div>
+        <h1>NutriSeeker</h1>
+        <p class="tagline">Image + text → calories &amp; macros · IFCT-first · no API keys</p>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button type="button" class="tab active" data-tab="analyze" role="tab">Analyze meal</button>
+      <button type="button" class="tab" data-tab="text" role="tab">Text only</button>
+      <button type="button" class="tab" data-tab="about" role="tab">Stack</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="panel-analyze" class="panel active">
+      <div class="layout">
+        <div class="card upload-card">
+          <h2>Meal photo</h2>
+          <p class="hint">Drop an image or click to browse. Add notes for better fusion (DietAI-style).</p>
+          <label class="dropzone" id="dropzone">
+            <input type="file" id="file" accept="image/*" hidden />
+            <div id="preview-placeholder" class="preview-placeholder">
+              <span class="big-icon">⌁</span>
+              <span>Upload plate photo</span>
+            </div>
+            <img id="preview" class="preview hidden" alt="Preview" />
+          </label>
+          <label class="field">
+            <span>Meal description (optional)</span>
+            <textarea id="meal-text" rows="3" placeholder="e.g. rice 200g, dal, cucumber salad — or override portions here"></textarea>
+          </label>
+          <button type="button" class="btn primary" id="btn-run">Run analysis</button>
+          <p class="fineprint">Vision: BLIP-2 on GPU, BLIP on CPU, or <strong>Ollama LLaVA</strong> if running locally.</p>
+        </div>
+        <div class="card results-card">
+          <div class="results-head">
+            <h2>Results</h2>
+            <span id="vision-backend" class="pill mono"></span>
+          </div>
+          <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Running vision + nutrition graph…</p>
+          </div>
+          <div id="empty-state" class="empty">
+            <p>Results appear here with macro totals and per-item breakdown.</p>
+          </div>
+          <div id="result-body" class="hidden">
+            <p id="caption-block" class="caption"></p>
+            <div class="macro-row">
+              <div class="ring" id="ring-cal" title="Calories">
+                <svg viewBox="0 0 36 36">
+                  <path class="bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path class="fg cal" id="arc-cal" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div class="ring-label"><span id="tot-cal">0</span><small>kcal</small></div>
+              </div>
+              <ul class="macro-list">
+                <li><span class="dot p"></span> Protein <strong id="tot-p">0</strong> g</li>
+                <li><span class="dot c"></span> Carbs <strong id="tot-c">0</strong> g</li>
+                <li><span class="dot f"></span> Fat <strong id="tot-f">0</strong> g</li>
+                <li><span class="dot i"></span> Fiber <strong id="tot-fi">0</strong> g</li>
+              </ul>
+            </div>
+            <h3 class="subh">Items</h3>
+            <div id="items-table" class="items"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-text" class="panel">
+      <div class="layout single">
+        <div class="card">
+          <h2>Describe the meal</h2>
+          <p class="hint">No image — we parse foods from text and match IFCT / local USDA.</p>
+          <textarea id="text-only-input" rows="6" placeholder="Example: 1 bowl rice, 1 cup dal, cucumber salad"></textarea>
+          <button type="button" class="btn primary" id="btn-text-run">Estimate nutrients</button>
+        </div>
+        <div class="card results-card">
+          <h2>Results</h2>
+          <div id="text-loading" class="loading hidden"><div class="spinner"></div></div>
+          <div id="text-result-body" class="hidden"></div>
+          <div id="text-empty" class="empty"><p>Parsed foods and scaled macros will show here.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-about" class="panel">
+      <div class="card prose">
+        <h2>Architecture (DietAI / NutriSeeker)</h2>
+        <ul>
+          <li><strong>Frontend:</strong> FastAPI-served SPA (this UI)</li>
+          <li><strong>Vision:</strong> BLIP-2 (GPU) or BLIP-large (CPU); optional <strong>Ollama + LLaVA</strong> for richer lists</li>
+          <li><strong>NLP / retrieval:</strong> Multilingual sentence embeddings → semantic match to IFCT food names</li>
+          <li><strong>Portions:</strong> Keyword priors + optional <code>foodname: 150g</code> in your notes</li>
+          <li><strong>Data:</strong> IFCT 2017 CSV (primary) + bundled <code>usda_foods_sample.csv</code> — replace with full USDA bulk export if needed (still no API key)</li>
+        </ul>
+        <p class="hint">For development without a local GPU, Google Colab or Kaggle kernels work well; deploy Ollama + LLaVA on a desktop for the stack in your diagram.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>NutriSeeker v2 · inspired by DietAI24</span>
+  </footer>
+  <script src="/assets/app.js"></script>
+</body>
+</html>
