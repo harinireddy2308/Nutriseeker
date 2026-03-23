@@ -62,13 +62,13 @@ The first Colab notebook (`NutriSeeker(with_ifct).ipynb`) remains a reference; v
 3. Put your IFCT file in the expected location:
     - Copy/Upload ifct2017_compositions.csv into:
     - /content/nutriseeker/nutriseeker/data/ifct2017_compositions.csv
-4. Start the server (BLIP-2 on GPU):
-|import os, subprocess
-|os.environ["NUTRI_VISION"] = "blip2"
-|proc = subprocess.Popen(
-    ["uvicorn", "nutriseeker.app.main:app", "--host", "0.0.0.0", "--port", "8000"],
-    cwd="/content/nutriseeker",
-|)
+4. Start the server (BLIP-2 on GPU):<br>
+import os, subprocess <br>
+os.environ["NUTRI_VISION"] = "blip2"<br>
+proc = subprocess.Popen(<br>
+    ["uvicorn", "nutriseeker.app.main:app", "--host", "0.0.0.0", "--port", "8000"],<br>
+    cwd="/content/nutriseeker",<br>
+)<br>
 Open the UI window:
 from google.colab import output
 output.serve_kernel_port_as_window(8000, height=900)
